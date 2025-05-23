@@ -1,0 +1,243 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* --- Variables (for reference, used directly in styles) ---
+   Primary Color: #00ff88
+   Secondary Color: #ffffff
+   Card Background: #3c3c3c
+   Body Dark Gradient: linear-gradient(135deg, #1e1e1e, #2c2c2c)
+   Dark Text for Buttons: #1e1e1e
+*/
+
+/* --- General Body Styling --- */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+    color: #ffffff; /* Secondary color for text */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* --- Headings --- */
+h1, h2, h3, h4, h5, h6 {
+    color: #00ff88; /* Primary color */
+    margin-top: 0;
+}
+
+/* --- Container/Card Styling (Glassmorphism) --- */
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Form Elements --- */
+form {
+    /* Forms themselves can be containers or within containers */
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select {
+    display: block;
+    width: calc(100% - 22px); /* Full width minus padding and border */
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #2c2c2c;
+    color: #fff;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #00ff88; /* Primary color */
+    box-shadow: 0 0 5px #00ff88; /* Primary color */
+}
+
+/* --- Buttons --- */
+button, .button-style { /* .button-style can be used for <a> tags styled as buttons */
+    display: inline-block; /* Changed from block to inline-block for flexibility */
+    background-color: #00ff88; /* Primary color */
+    color: #1e1e1e; /* Dark text for contrast */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none; /* For <a> tags styled as buttons */
+
+    /* Ripple effect setup */
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover, .button-style:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #00ff88; /* Primary color */
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5); /* White ripple */
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0) translate(-50%, -50%);
+        opacity: 1;
+    }
+    /* Scale factor can be adjusted based on button size, 40 seems reasonable for typical button sizes */
+    100% {
+        transform: scale(40, 40) translate(-50%, -50%);
+        opacity: 0;
+    }
+}
+
+/* Apply ripple on focus and when not active (to avoid re-triggering on click if JS is used) */
+/* This CSS-only approach triggers on focus. For click-only, JS is better. */
+button:focus:not(:active)::after {
+    animation: ripple 0.6s ease-out;
+}
+
+
+/* --- Tables (for Scoreboard) --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Space above the table */
+}
+
+th, td {
+    padding: 12px 15px; /* Slightly more padding for better readability */
+    text-align: left;
+    border-bottom: 1px solid #444; /* Darker border for subtle separation */
+}
+
+th {
+    background-color: #00ff88; /* Primary color */
+    color: #1e1e1e; /* Dark text for contrast */
+    font-weight: bold;
+}
+
+td {
+    background-color: #3c3c3c; /* Card background color for rows */
+}
+
+tr:nth-child(even) td {
+    background-color: #4a4a4a; /* Slightly different for striped rows, optional */
+}
+
+/* Scoreboard Highlight for Top Scorer */
+tr.top-scorer td { /* Apply this class to the TR */
+    background: #ffd700 !important; /* Gold, important to override other backgrounds */
+    color: #000 !important; /* Black text for readability on gold */
+    font-weight: bold;
+}
+
+/* Fade-in Animation for Table Rows */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in { /* Apply to new rows in scoreboard, or all rows if desired */
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* --- Links --- */
+a {
+    color: #00ff88; /* Primary color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Utility Classes --- */
+.text-center {
+    text-align: center;
+}
+.mt-1 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 1rem; }
+
+/* --- Responsive Design --- */
+@media (max-width: 600px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    select,
+    button { /* Ensure buttons also go full width if desired in forms */
+        width: calc(100% - 20px); /* Adjust padding for inputs */
+        box-sizing: border-box; /* Add to buttons if they are full width */
+    }
+    
+    button, .button-style {
+        /* If buttons are not meant to be full width, adjust their width or keep as inline-block */
+         width: auto; /* Revert to auto if not stacking full-width in forms */
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Example for stacking form elements or other flex containers */
+    /* .some-flex-container {
+        flex-direction: column;
+    } */
+}
+
+/* Further specific adjustments for smaller screens if needed */
+@media (max-width: 400px) {
+    body {
+        font-size: 0.9rem; /* Slightly smaller base font for very small screens */
+    }
+    .container {
+        padding: 10px;
+    }
+    h1 {
+        font-size: 1.6rem;
+    }
+}
