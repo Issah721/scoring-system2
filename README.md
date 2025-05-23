@@ -1,26 +1,20 @@
 # ScoringSystem
 
 ## Overview
-A simple LAMP stack based scoring system for multiple judges and participants. This system now features user authentication with roles (admin, judge), allowing administrators to manage users (other admins and judges), and judges to score registered participants. It displays a real-time scoreboard.
+A simple LAMP stack based scoring system for multiple judges and users (participants). This system allows administrators to add judges, judges to select their profile and score registered users (participants), and displays a real-time public scoreboard.
 
 ## Features
-*   **Secure Login System**: Admins and Judges can log in using their credentials.
-*   **User Management (Admin Panel)**: Admins can add, edit, and delete other admin and judge users.
-*   **Role-Based Access Control**:
-    *   Admins have access to user management.
-    *   Judges have access to scoring participants.
-*   **Judge Portal**: Logged-in judges can submit scores for participants.
-*   **Dynamic Scoreboard**: Displays real-time scores, auto-refreshing every 10 seconds.
-*   **Navigation Bar**: Consistent navigation across all pages, adapting to user's login status and role.
-*   **Session Management**: PHP sessions manage user login state. Judges score under their own authenticated identity.
-*   **Glassmorphism UI**: Modern dark theme with glass-like card elements.
-*   **Responsive Design**: Basic responsiveness for usability on smaller screens.
+*   Admin panel to add new judges.
+*   Judge portal for selecting a judge profile and submitting scores for users (participants).
+*   Dynamic public scoreboard with auto-refresh (every 10 seconds).
+*   Glassmorphism UI design with a dark theme.
+*   Responsive design for basic usability on smaller screens.
 
 ## Technology Stack
 *   **L**inux (Assumed, typically part of XAMPP/LAMP stack)
 *   **A**pache (Typically via XAMPP or a standard LAMP setup)
 *   **M**ySQL (Typically via XAMPP or a standard LAMP setup)
-*   **P**HP (For backend logic, API, and session management)
+*   **P**HP (For backend logic and API)
 *   HTML, CSS, JavaScript (For frontend structure, styling, and interactivity)
 
 ## Setup Instructions (for XAMPP)
@@ -33,134 +27,104 @@ A simple LAMP stack based scoring system for multiple judges and participants. T
     *   Create a new database named `scoring_system` (if it's not automatically created by the SQL script).
     *   Select the `scoring_system` database.
     *   Click on the "Import" tab.
-    *   Choose the `setup.sql` file from the cloned repository and click "Go". This will create the necessary tables:
-        *   `users`: For admin and judge authentication (stores usernames, hashed passwords, roles).
-        *   `participants`: For individuals/teams being scored.
-        *   `scores`: For storing scores.
-        *   It also inserts initial demo users and participants.
+    *   Choose the `setup.sql` file from the cloned repository and click "Go". This will create the necessary tables (`judges`, `users` for participants, and `scores`) and insert initial participant data.
 5.  **Access Application**:
-    *   **Login Page**: `http://localhost/scoring-system/login.php` (Start here!)
-    *   **Admin Panel**: `http://localhost/scoring-system/admin.php` (Requires admin login)
-    *   **Judge Portal**: `http://localhost/scoring-system/judge.php` (Requires judge login)
-    *   **Scoreboard**: `http://localhost/scoring-system/scoreboard.php` (Publicly accessible)
-6.  **Demo Credentials**:
-    *   **Admin**:
-        *   Username: `admin1`
-        *   Password: `adminpass123`
-    *   **Judge**:
-        *   Username: `judge1`
-        *   Password: `judgepass123`
+    *   **Admin Panel**: `http://localhost/scoring-system/admin.php`
+    *   **Judge Portal**: `http://localhost/scoring-system/judge.php`
+    *   **Scoreboard**: `http://localhost/scoring-system/scoreboard.php`
+    (All pages are publicly accessible in this V1 version).
 
 ## Database Schema
 The following SQL script (`setup.sql`) is used to create the database and tables:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS scoring_system;
+
 USE scoring_system;
 
+-- Drop tables in reverse order of dependency, ensuring all V2 tables are gone
 DROP TABLE IF EXISTS `scores`;
-DROP TABLE IF EXISTS `judges`; -- Old table, ensure it's dropped
-DROP TABLE IF EXISTS `users`; -- Will be recreated as auth table first, then old users content to participants
-DROP TABLE IF EXISTS `participants`; -- In case of re-running script
+DROP TABLE IF EXISTS `participants`; -- V2 specific
+DROP TABLE IF EXISTS `users`; -- This will be recreated as V1 participants table
+DROP TABLE IF EXISTS `judges`; -- This will be recreated as V1 judges table
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `username` VARCHAR(50) UNIQUE NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `role` ENUM('admin', 'judge') NOT NULL,
-  `display_name` VARCHAR(100) NOT NULL
-);
+-- V1 Schema:
 
--- Example Hashes:
--- 'adminpass123' -> $2y$10$DO.eNle82N9JXHyuY9GUrIQh72e32N0xZq0mk7g0i1fLqC
--- 'judgepass123' -> $2y$10$yqWWBqM.A.uU7NnrcQx2p8S8U/CNxVzAGYaRix1v2YgneeS
-INSERT INTO `users` (`username`, `password`, `role`, `display_name`) VALUES
-('admin1', '$2y$10$DO.eNle82N9JXHyuY9GUrIQh72e32N0xZq0mk7g0i1fLqC', 'admin', 'Admin One'),
-('judge1', '$2y$10$yqWWBqM.A.uU7NnrcQx2p8S8U/CNxVzAGYaRix1v2YgneeS', 'judge', 'Judge One');
-
-CREATE TABLE IF NOT EXISTS `participants` (
-  `participant_id` INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS `judges` (
+  `judge_id` INT AUTO_INCREMENT PRIMARY KEY,
   `username` VARCHAR(255) UNIQUE NOT NULL,
   `display_name` VARCHAR(255) NOT NULL
 );
 
-INSERT INTO `participants` (`username`, `display_name`) VALUES
+CREATE TABLE IF NOT EXISTS `users` ( -- This is the PARTICIPANTS table in V1
+  `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `username` VARCHAR(255) UNIQUE NOT NULL,
+  `display_name` VARCHAR(255) NOT NULL
+);
+
+INSERT INTO `users` (`username`, `display_name`) VALUES
 ('user1', 'Participant One'),
 ('user2', 'Participant Two'),
 ('user3', 'Participant Three');
 
 CREATE TABLE IF NOT EXISTS `scores` (
   `score_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `participant_id` INT NOT NULL,
-  `judge_user_id` INT NOT NULL,
+  `user_id` INT NOT NULL, -- Foreign key to users (participants)
+  `judge_id` INT NOT NULL, -- Foreign key to judges
   `points` INT NOT NULL CHECK (points >= 1 AND points <= 100),
   `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `unique_participant_judge` (`participant_id`, `judge_user_id`),
-  FOREIGN KEY (`participant_id`) REFERENCES `participants`(`participant_id`) ON DELETE CASCADE,
-  FOREIGN KEY (`judge_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+  UNIQUE KEY `unique_user_judge` (`user_id`, `judge_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`judge_id`) REFERENCES `judges`(`judge_id`) ON DELETE CASCADE
 );
 ```
 
 **Table Descriptions:**
-*   `users`: Stores authentication credentials (username, hashed password) and role (`admin`, `judge`) for system users. Also includes a display name.
-*   `participants`: Stores information about the participants/entities being scored (e.g., contestants, teams).
-*   `scores`: Records the scores given by judges (from `users` table) to participants (from `participants` table). Ensures a participant can only be scored once by the same judge and that points are between 1 and 100. Foreign keys link to `participants` and `users` tables.
+*   `judges`: Stores information about the judges, including a unique username and a display name.
+*   `users`: Stores information about the participants being scored. Includes some initial sample participants.
+*   `scores`: Records the scores given by judges to users (participants). It ensures a user can only be scored once by the same judge and that points are between 1 and 100. Foreign keys link to `users` and `judges` tables.
 
 ## API Endpoints
-The `api.php` file provides the backend logic. All responses are in JSON. Session-based authentication is required for protected endpoints.
+The `api.php` file provides the backend logic for the application. All responses are in JSON format.
 
-**Authentication:**
-*   `POST /api.php?action=login`: Authenticates a user (admin/judge) and starts a session.
-    *   Expects `username` and `password`.
-*   `POST /api.php?action=logout`: Terminates the user session.
-
-**User Management (Admin Role Required):**
-*   `POST /api.php?action=add_user`: Adds a new user (admin or judge).
-    *   Expects `username`, `password`, `role`, `display_name`.
-*   `GET /api.php?action=get_users&role=<role>`: Retrieves a list of users. Can be filtered by `role` (admin/judge).
-*   `POST /api.php?action=update_user`: Updates an existing user's details.
-    *   Expects `user_id`, and optionally `username`, `display_name`, `password`, `role`.
-*   `POST /api.php?action=delete_user`: Deletes a user.
-    *   Expects `user_id`.
-
-**Scoring (Judge Role Required for `get_users_not_scored` and `add_score`):**
-*   `GET /api.php?action=get_users_not_scored`: Retrieves participants not yet scored by the logged-in judge (judge ID from session).
-*   `POST /api.php?action=add_score`: Submits a score for a participant by the logged-in judge.
-    *   Expects `participant_id` and `points` (judge ID from session).
-
-**Public Endpoints:**
-*   `GET /api.php?action=get_scoreboard`: Retrieves the current scoreboard data.
-
-**Superseded Endpoints (Old API):**
-*   `POST /api.php?action=add_judge`: Replaced by `POST /api.php?action=add_user` with `role='judge'`.
-*   `GET /api.php?action=get_judges`: Replaced by `GET /api.php?action=get_users&role=judge`.
+*   `POST /api.php?action=add_judge`: Adds a new judge.
+    *   Expects `username` and `display_name` in the POST body.
+*   `GET /api.php?action=get_judges`: Retrieves a list of all judges.
+*   `GET /api.php?action=get_users_not_scored&judge_id=X`: Retrieves users (participants) not yet scored by the specified `judge_id`.
+*   `POST /api.php?action=add_score`: Submits a score for a user (participant) by a judge.
+    *   Expects `user_id` (participant's ID), `judge_id`, and `points` in the POST body.
+*   `GET /api.php?action=get_scoreboard`: Retrieves the current scoreboard data, including total points for each user (participant), ordered by points.
 
 ## Design Choices
 *   **UI Styling**:
-    *   **Theme**: A modern dark theme with a primary color (`#00ff88`) for highlights.
-    *   **Glassmorphism**: Container elements use a frosted glass effect.
-    *   **Responsive Design**: Basic media queries for better usability on smaller screens.
-*   **Authentication**:
-    *   PHP sessions are used for managing user login state.
-    *   Passwords are securely hashed using `password_hash()` and verified with `password_verify()`.
-*   **Navigation**: A dynamic navigation bar (`navigation.php`) is included on all pages, showing relevant links based on login status and user role.
-*   **LAMP Integration**: Standard PHP for backend, MySQL for database, served via Apache.
-*   **Frontend Interactivity**: Vanilla JavaScript with `fetch` API for AJAX calls, dynamic content updates, and form handling.
+    *   **Theme**: A modern dark theme is used for aesthetics and reduced eye strain.
+    *   **Glassmorphism**: Container elements use a frosted glass effect (`rgba` background, `backdrop-filter: blur()`).
+    *   **Primary Color**: `#00ff88` (a vibrant green) is used for highlights, buttons, and important elements.
+    *   **Responsive Design**: Basic media queries are implemented in `styles.css` to improve layout and usability on smaller screens.
+*   **LAMP Integration**:
+    *   **PHP**: Serves as the backend language, handling API requests (`api.php`) and database interactions (`db.php`).
+    *   **MySQL**: Used as the relational database to store judge, user (participant), and score data.
+    *   **Apache**: The web server responsible for serving the PHP, HTML, CSS, and JS files.
+*   **Frontend Interactivity**:
+    *   **JavaScript (Vanilla JS)**: Extensively used for client-side logic.
+    *   **AJAX (`fetch` API)**: Employed for asynchronous communication with `api.php` to add judges, submit scores, and load data without full page reloads.
+    *   **Dynamic Content Updates**: The judge portal and scoreboard dynamically update content based on API responses.
+    *   **Form Handling**: Client-side validation and submission for a smoother user experience.
 
 ## Assumptions
-*   The application is primarily designed for a local XAMPP environment.
-*   User authentication is now implemented for admin and judge roles. Admin and Judge pages require login. The scoreboard remains public.
-*   The `root` MySQL user with an empty password is used for database connection in `db.php` (default for XAMPP). Update `db.php` if your MySQL setup differs.
+*   The application is primarily designed and tested for a local XAMPP environment.
+*   No user authentication or authorization is implemented. All pages (`admin.php`, `judge.php`, `scoreboard.php`) are publicly accessible.
+*   Error handling is basic: messages are typically displayed on the page or logged to the browser console.
+*   The `root` MySQL user with an empty password is used for database connection in `db.php`, which is standard for default XAMPP setups. Update `db.php` if your MySQL setup differs.
 
 ## Future Features
-*   **Participant Management**: CRUD operations for participants in the admin panel.
-*   **Forgot Password Functionality**: Allow users to reset their passwords.
-*   **More Granular Permissions**: Potentially different levels of admin access.
+*   **User Authentication & Authorization**: Implement a login system for judges and administrators, and restrict access based on roles.
+*   **User Management**: Allow admins to manage judge accounts (edit, delete).
+*   **Participant Management**: Allow admins to add, edit, or delete participants.
 *   **Enhanced UI/UX**: More sophisticated styling, form validation, and user feedback.
 *   **Real-time Scoreboard (WebSockets)**: For instant updates instead of polling.
-*   **Audit Trails**: Log important actions like score submissions or user modifications.
 *   **Input Validation & Sanitization**: Further enhance server-side validation and output encoding for security.
 
-This project serves as a foundational example of a dynamic web application using the LAMP stack with authentication and role-based features.
+This project serves as a foundational example of a dynamic web application using the LAMP stack.
 Ensure your XAMPP MySQL server is running on the default port (3306) and that the `root` user has no password, or update `db.php` accordingly.
 ```

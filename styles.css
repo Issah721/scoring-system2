@@ -15,49 +15,9 @@ body {
     background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
     color: #ffffff; /* Secondary color for text */
     margin: 0;
-    padding: 0; /* No padding to allow full-width nav */
+    padding: 0;
     line-height: 1.6;
 }
-
-/* --- Navigation Bar Styles --- */
-nav.main-nav {
-    background-color: #1e1e1e; /* Dark background for nav */
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(0, 255, 136, 0.2); /* Subtle border with primary color */
-    text-align: center; /* Center the ul */
-    width: 100%; /* Ensure it spans full width */
-    box-sizing: border-box;
-}
-
-nav.main-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: inline-block; /* Allows centering of the ul itself if nav is text-align: center */
-}
-
-nav.main-nav ul li {
-    display: inline-block;
-    margin: 0 10px;
-}
-
-nav.main-nav ul li a {
-    color: #00ff88; /* Primary color for links */
-    text-decoration: none;
-    font-weight: bold;
-    padding: 8px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease;
-}
-
-nav.main-nav ul li a:hover,
-nav.main-nav ul li a:focus {
-    background-color: rgba(0, 255, 136, 0.15); /* Slightly more visible primary color background */
-    text-shadow: 0 0 10px #00ff88, 0 0 5px #00ff88; /* Enhanced glow */
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-    outline: none; /* Remove default focus outline if custom is applied */
-}
-
 
 /* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
@@ -215,33 +175,13 @@ tr.top-scorer td {
 }
 
 /* --- Links --- */
-a { /* General link styles - excluding nav links which have their own */
+a {
     color: #00ff88; 
     text-decoration: none;
 }
 
-a:not(nav.main-nav ul li a):hover { /* Exclude nav links from this hover */
+a:hover {
     text-decoration: underline;
-}
-
-/* --- Message Styles (e.g., for login feedback, API responses) --- */
-.message { /* General class for messages */
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 5px;
-    text-align: center;
-    font-weight: bold;
-    box-sizing: border-box; /* Ensure padding doesn't make it overflow parent */
-}
-.error-message {
-    background-color: rgba(255, 0, 0, 0.1); /* Faint red background */
-    color: #ff4d4d; /* Lighter red text for dark theme */
-    border: 1px solid #ff4d4d;
-}
-.success-message {
-    background-color: rgba(0, 255, 136, 0.1); /* Faint primary color background */
-    color: #00ff88; /* Primary color text */
-    border: 1px solid #00ff88;
 }
 
 /* --- Utility Classes --- */
@@ -253,14 +193,6 @@ a:not(nav.main-nav ul li a):hover { /* Exclude nav links from this hover */
 
 /* --- Responsive Design --- */
 @media (max-width: 600px) {
-    nav.main-nav ul li {
-        display: block; /* Stack nav links vertically */
-        margin: 10px 0; /* Adjust margin for stacked links */
-    }
-    nav.main-nav ul li a {
-        display: block; /* Make links take full width for easier tapping */
-    }
-
     .container {
         margin: 10px;
         padding: 15px;
