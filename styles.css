@@ -15,14 +15,56 @@ body {
     background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
     color: #ffffff; /* Secondary color for text */
     margin: 0;
-    padding: 0;
+    padding: 0; /* No padding to allow full-width nav */
     line-height: 1.6;
 }
+
+/* --- Navigation Bar Styles --- */
+nav.main-nav {
+    background-color: #1e1e1e; /* Dark background for nav */
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2); /* Subtle border with primary color */
+    text-align: center; /* Center the ul */
+    width: 100%; /* Ensure it spans full width */
+    box-sizing: border-box;
+}
+
+nav.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block; /* Allows centering of the ul itself if nav is text-align: center */
+}
+
+nav.main-nav ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+nav.main-nav ul li a {
+    color: #00ff88; /* Primary color for links */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease;
+}
+
+nav.main-nav ul li a:hover,
+nav.main-nav ul li a:focus {
+    background-color: rgba(0, 255, 136, 0.15); /* Slightly more visible primary color background */
+    text-shadow: 0 0 10px #00ff88, 0 0 5px #00ff88; /* Enhanced glow */
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    outline: none; /* Remove default focus outline if custom is applied */
+}
+
 
 /* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
     color: #00ff88; /* Primary color */
-    margin-top: 0;
+    margin-top: 0; /* Resetting default margin, can be adjusted per element later */
+    /* Add some default bottom margin for spacing if containers don't provide it */
+    margin-bottom: 1rem; 
 }
 
 /* --- Container/Card Styling (Glassmorphism) --- */
@@ -33,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     padding: 20px;
-    margin: 20px auto;
+    margin: 20px auto; /* This margin will ensure space below nav bar */
     max-width: 800px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -41,6 +83,13 @@ h1, h2, h3, h4, h5, h6 {
 /* --- Form Elements --- */
 form {
     /* Forms themselves can be containers or within containers */
+}
+
+label { /* General label styling */
+    display: block;
+    margin-bottom: 8px; /* Space between label and input */
+    color: #ffffff; /* Ensure labels are visible on dark theme */
+    font-weight: bold;
 }
 
 input[type="text"],
@@ -71,7 +120,7 @@ select:focus {
 
 /* --- Buttons --- */
 button, .button-style { /* .button-style can be used for <a> tags styled as buttons */
-    display: inline-block; /* Changed from block to inline-block for flexibility */
+    display: inline-block; 
     background-color: #00ff88; /* Primary color */
     color: #1e1e1e; /* Dark text for contrast */
     padding: 10px 15px;
@@ -82,9 +131,7 @@ button, .button-style { /* .button-style can be used for <a> tags styled as butt
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
     text-align: center;
-    text-decoration: none; /* For <a> tags styled as buttons */
-
-    /* Ripple effect setup */
+    text-decoration: none; 
     position: relative;
     overflow: hidden;
 }
@@ -113,15 +160,12 @@ button::after {
         transform: scale(0, 0) translate(-50%, -50%);
         opacity: 1;
     }
-    /* Scale factor can be adjusted based on button size, 40 seems reasonable for typical button sizes */
     100% {
         transform: scale(40, 40) translate(-50%, -50%);
         opacity: 0;
     }
 }
 
-/* Apply ripple on focus and when not active (to avoid re-triggering on click if JS is used) */
-/* This CSS-only approach triggers on focus. For click-only, JS is better. */
 button:focus:not(:active)::after {
     animation: ripple 0.6s ease-out;
 }
@@ -131,60 +175,73 @@ button:focus:not(:active)::after {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px; /* Space above the table */
+    margin-top: 20px; 
 }
 
 th, td {
-    padding: 12px 15px; /* Slightly more padding for better readability */
+    padding: 12px 15px; 
     text-align: left;
-    border-bottom: 1px solid #444; /* Darker border for subtle separation */
+    border-bottom: 1px solid #444; 
 }
 
 th {
-    background-color: #00ff88; /* Primary color */
-    color: #1e1e1e; /* Dark text for contrast */
+    background-color: #00ff88; 
+    color: #1e1e1e; 
     font-weight: bold;
 }
 
 td {
-    background-color: #3c3c3c; /* Card background color for rows */
+    background-color: #3c3c3c; 
 }
 
 tr:nth-child(even) td {
-    background-color: #4a4a4a; /* Slightly different for striped rows, optional */
+    background-color: #4a4a4a; 
 }
 
-/* Scoreboard Highlight for Top Scorer */
-tr.top-scorer td { /* Apply this class to the TR */
-    background: #ffd700 !important; /* Gold, important to override other backgrounds */
-    color: #000 !important; /* Black text for readability on gold */
+tr.top-scorer td { 
+    background: #ffd700 !important; 
+    color: #000 !important; 
     font-weight: bold;
 }
 
 /* Fade-in Animation for Table Rows */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.fade-in { /* Apply to new rows in scoreboard, or all rows if desired */
+.fade-in { 
     animation: fadeIn 0.5s ease-out;
 }
 
 /* --- Links --- */
-a {
-    color: #00ff88; /* Primary color */
+a { /* General link styles - excluding nav links which have their own */
+    color: #00ff88; 
     text-decoration: none;
 }
 
-a:hover {
+a:not(nav.main-nav ul li a):hover { /* Exclude nav links from this hover */
     text-decoration: underline;
+}
+
+/* --- Message Styles (e.g., for login feedback, API responses) --- */
+.message { /* General class for messages */
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    box-sizing: border-box; /* Ensure padding doesn't make it overflow parent */
+}
+.error-message {
+    background-color: rgba(255, 0, 0, 0.1); /* Faint red background */
+    color: #ff4d4d; /* Lighter red text for dark theme */
+    border: 1px solid #ff4d4d;
+}
+.success-message {
+    background-color: rgba(0, 255, 136, 0.1); /* Faint primary color background */
+    color: #00ff88; /* Primary color text */
+    border: 1px solid #00ff88;
 }
 
 /* --- Utility Classes --- */
@@ -196,6 +253,14 @@ a:hover {
 
 /* --- Responsive Design --- */
 @media (max-width: 600px) {
+    nav.main-nav ul li {
+        display: block; /* Stack nav links vertically */
+        margin: 10px 0; /* Adjust margin for stacked links */
+    }
+    nav.main-nav ul li a {
+        display: block; /* Make links take full width for easier tapping */
+    }
+
     .container {
         margin: 10px;
         padding: 15px;
@@ -206,14 +271,15 @@ a:hover {
     input[type="email"],
     input[type="number"],
     select,
-    button { /* Ensure buttons also go full width if desired in forms */
-        width: calc(100% - 20px); /* Adjust padding for inputs */
-        box-sizing: border-box; /* Add to buttons if they are full width */
+    button { 
+        /* Ensure buttons go full width if desired in forms, or keep as auto */
+        /* width: calc(100% - 20px); /* Adjust padding for inputs */
+        /* box-sizing: border-box; /* Add to buttons if they are full width */
+        /* The above was commented out as it might make all buttons full-width which is not always desired */
     }
     
     button, .button-style {
-        /* If buttons are not meant to be full width, adjust their width or keep as inline-block */
-         width: auto; /* Revert to auto if not stacking full-width in forms */
+         /* width: auto; /* Revert to auto if not stacking full-width in forms */
     }
 
     h1 {
@@ -222,17 +288,11 @@ a:hover {
     h2 {
         font-size: 1.5rem;
     }
-
-    /* Example for stacking form elements or other flex containers */
-    /* .some-flex-container {
-        flex-direction: column;
-    } */
 }
 
-/* Further specific adjustments for smaller screens if needed */
 @media (max-width: 400px) {
     body {
-        font-size: 0.9rem; /* Slightly smaller base font for very small screens */
+        font-size: 0.9rem; 
     }
     .container {
         padding: 10px;
