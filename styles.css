@@ -175,12 +175,13 @@ tr.top-scorer td {
 }
 
 /* --- Links --- */
-a {
+/* General link styling - modified to be less specific than tab navigation links */
+a:not(.tab-navigation a) { /* Exclude tab navigation links from this general styling if they need to be different */
     color: #00ff88; 
     text-decoration: none;
 }
 
-a:hover {
+a:not(.tab-navigation a):hover {
     text-decoration: underline;
 }
 
@@ -232,4 +233,57 @@ a:hover {
     h1 {
         font-size: 1.6rem;
     }
+}
+
+/* --- Tab Navigation Styling --- */
+.tab-navigation {
+    display: flex;
+    background: #1e1e1e; /* Dark background */
+    margin-bottom: 20px; /* Separate from content */
+    border-radius: 5px; /* Optional, for consistency */
+    overflow: hidden; /* Ensures child border-radius or shadows don't spill */
+}
+
+.tab-navigation a { /* Styling for individual tab links */
+    padding: 10px 20px;
+    color: #ffffff; /* White text for inactive tabs */
+    text-decoration: none;
+    flex-grow: 1; /* Tabs can expand to fill space */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, text-shadow 0.3s; /* Smooth transitions */
+    border-right: 1px solid #2c2c2c; /* Separator line */
+}
+
+.tab-navigation a:last-child {
+    border-right: none; /* No separator for the last tab */
+}
+
+.tab-navigation a:hover:not(.active) { /* Hover effect for inactive tabs */
+    text-shadow: 0 0 5px #00ff88; /* Neon green text shadow */
+    background-color: #2c2c2c; /* Slightly lighter background on hover */
+}
+
+.tab-navigation a.active { /* Active tab link */
+    background-color: #00ff88; /* Neon green background */
+    color: #1e1e1e; /* Dark text for contrast */
+    box-shadow: 0 0 10px #00ff88; /* Neon green glow */
+    text-shadow: none; /* Remove hover text-shadow if active */
+}
+
+/* --- Tab Content Styling --- */
+.tab-content {
+    display: none; /* Hidden by default */
+    /* Content styling (padding, etc.) can be added here or within specific content pages */
+}
+
+.tab-content.active {
+    display: block; /* Visible */
+    /* Animation for active tab content appearing */
+    animation: fadeInContent 0.5s ease-in-out;
+}
+
+@keyframes fadeInContent {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

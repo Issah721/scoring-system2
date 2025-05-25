@@ -29,10 +29,8 @@ A simple LAMP stack based scoring system for multiple judges and users (particip
     *   Click on the "Import" tab.
     *   Choose the `setup.sql` file from the cloned repository and click "Go". This will create the necessary tables (`judges`, `users` for participants, and `scores`) and insert initial participant data.
 5.  **Access Application**:
-    *   **Admin Panel**: `http://localhost/scoring-system/admin.php`
-    *   **Judge Portal**: `http://localhost/scoring-system/judge.php`
-    *   **Scoreboard**: `http://localhost/scoring-system/scoreboard.php`
-    (All pages are publicly accessible in this V1 version).
+    *   **Main Application**: `http://localhost/scoring-system/index.php`
+    (All functionalities - Admin Panel, Judge Portal, and Scoreboard - are accessible via tabs on this single page and are publicly accessible in this version).
 
 ## Database Schema
 The following SQL script (`setup.sql`) is used to create the database and tables:
@@ -110,10 +108,11 @@ The `api.php` file provides the backend logic for the application. All responses
     *   **AJAX (`fetch` API)**: Employed for asynchronous communication with `api.php` to add judges, submit scores, and load data without full page reloads.
     *   **Dynamic Content Updates**: The judge portal and scoreboard dynamically update content based on API responses.
     *   **Form Handling**: Client-side validation and submission for a smoother user experience.
+        - Consolidated Admin Panel, Judge Portal, and Scoreboard into a single `index.php` with a tabbed interface for better usability.
 
 ## Assumptions
 *   The application is primarily designed and tested for a local XAMPP environment.
-*   No user authentication or authorization is implemented. All pages (`admin.php`, `judge.php`, `scoreboard.php`) are publicly accessible.
+*   No user authentication or authorization is implemented. All functionalities (Admin, Judge, Scoreboard) are accessible via tabs on the main `index.php` page and are publicly accessible in this version.
 *   Error handling is basic: messages are typically displayed on the page or logged to the browser console.
 *   The `root` MySQL user with an empty password is used for database connection in `db.php`, which is standard for default XAMPP setups. Update `db.php` if your MySQL setup differs.
 
